@@ -160,6 +160,8 @@ class RPG(ConsoleWindow):
             "│",
             "│",
         ])
+        self.display.charMap.fill(" ")
+        self.display.fgMap.fill("7")
         self.display.bgMap.fill("0")
         self.display.bgMap.blit(self.background,0,0)
         self.miniMap.bgMap.fill("0")
