@@ -8,6 +8,7 @@ class Biome:
         self.colour=colour
         self.treeChance=treeChance
 class Entity:
+    unload=True
     x=0
     y=0
     charMap=None
@@ -23,6 +24,8 @@ class Entity:
 class Tree(Entity):
     charMap=createMap(["▲","║"])
     fgMap=createMap(["A","4"])
+    def render(self,display,playerX,playerY):
+        super().render(display,playerX,playerY+1)
 class RPG(ConsoleWindow):
     playerHealth=80
     playerMaxHealth=80
@@ -99,7 +102,7 @@ class RPG(ConsoleWindow):
         treeVal=moisture*10000
         treeVal=treeVal-int(treeVal)
         if biome.treeChance>treeVal:
-            self.entities.append(Tree(x+self.playerX,y+self.playerY-1))
+            self.entities.append(Tree(x+self.playerX,y+self.playerY))
         self.background[x,y]=colour
     def getNoise(self,x,y):
         return min(1,max(0,(self.noise.noise2d(x,y)+1)/2+self.noise.noise2d(x*3.5,y*3.5)/3.5))
@@ -120,19 +123,24 @@ class RPG(ConsoleWindow):
                 dx=-1
             elif keys[pygame.K_RIGHT]:
                 dx+=1
-        self.playerX+=dx
-        self.playerY+=dy
-        self.temp.blit(self.background,0,0)
-        self.background.fill("0")
-        self.background.blit(self.temp,-dx,-dy)
-        if dx:
-            _x=(worldWidth-1)*(dx>0)
-            for y in range(25):
-                self.updatePixel(_x,y)
-        if dy:
-            _y=24*(dy>0)
-            for x in range(worldWidth):
-                self.updatePixel(x,_y)
+        if not any((self.playerX+dx,self.playerY+dy)==(obj.x,obj.y)for obj in self.entities):
+            self.playerX+=dx
+            self.playerY+=dy
+            self.temp.blit(self.background,0,0)
+            self.background.fill("0")
+            self.background.blit(self.temp,-dx,-dy)
+            if dx:
+                _x=(worldWidth-1)*(dx>0)
+                for y in range(25):
+                    self.updatePixel(_x,y)
+            if dy:
+                _y=24*(dy>0)
+                for x in range(worldWidth):
+                    self.updatePixel(x,_y)
+        if self.tick%15==0:
+            for entity in self.entities:
+                if entity.unload and(not 0<=entity.x-self.playerX<worldWidth or not 0<=entity.y-self.playerY<25):
+                    self.entities.remove(entity)
         HUD=createSurf([
             "│",
             "│",
@@ -167,10 +175,10 @@ class RPG(ConsoleWindow):
         self.miniMap.bgMap.fill("0")
         HUD.blit(createSurf(["HP: %s/%s"%(self.playerHealth,self.playerMaxHealth)],("C","4")[self.playerHealth>self.playerMaxHealth<0.5]),2,1)
         HUD.blit(self.miniMap,1,18)
+        self.display.charMap[worldWidth//2,12]="■"
+        self.display.fgMap[worldWidth//2,12]="E"
         for entity in self.entities:
             entity.render(self.display,self.playerX,self.playerY)
         self.display.blit(HUD,worldWidth,0)
-        self.display.charMap[worldWidth//2,12]="■"
-        self.display.fgMap[worldWidth//2,12]="E"
         self.renderSurf(self.display,0,0)
         pygame.display.flip()
