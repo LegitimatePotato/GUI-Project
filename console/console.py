@@ -19,9 +19,13 @@ class CharMap:
         for _x in range(other.width):
             for _y in range(other.height):
                 try:
-                    self[x+_x,y+_y]=other[_x,_y]
+                    posX=x+_x
+                    posY=y+_y
+                    if posX<0 or posY<0:
+                        continue
+                    self[posX,posY]=other[_x,_y]
                 except IndexError:
-                    if y+_y>=self.height:
+                    if posY>=self.height:
                         break
                     else:
                         return

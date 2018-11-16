@@ -7,7 +7,6 @@ class RPG(ConsoleWindow):
     playerMaxHealth=80
     playerX=20
     playerY=3
-    map={}
     noise=OpenSimplex(random.randrange(10000))
     biomeScale=150
     temperatureScale=12
@@ -29,6 +28,7 @@ class RPG(ConsoleWindow):
     display=ConsoleSurf(80,25)
     background=CharMap(65,25)
     miniMap=ConsoleSurf(14,7)
+    temp=CharMap(65,25)
     def __init__(self):
         for x in range(65):
             for y in range(25):
@@ -60,7 +60,7 @@ class RPG(ConsoleWindow):
             biome="forest"
         else:
             biome="grassland"
-        self.background[_x,_y]=self.biomes[biome]
+        self.background[x,y]=self.biomes[biome]
     def getNoise(self,x,y):
         return min(1,max(0,(self.noise.noise2d(x,y)+1)/2+self.noise.noise2d(x*3.5,y*3.5)/3.5))
     def handleInput(self,event):
@@ -68,23 +68,23 @@ class RPG(ConsoleWindow):
     def update(self):
         super().update()
         keys=pygame.key.get_pressed()
+        dx=0
+        dy=0
         if self.tick%3==0:
             if keys[pygame.K_UP]:
-                self.playerY-=1
+                dy=-1
             elif keys[pygame.K_DOWN]:
-                self.playerY+=1
+                dy=1
         if self.tick%2==0:
             if keys[pygame.K_LEFT]:
-                self.playerX-=1
+                dx=-1
             elif keys[pygame.K_RIGHT]:
-                self.playerX+=1
-        actualX=self.playerX//13
-        actualY=self.playerY//5
-        if actualX!=self.activeChunk.x or actualY!=self.activeChunk.y:
-            for x in range(-7,7):
-                for y in range(-4,4):
-                    self.loadChunk(actualX+x,actualY+y)
-            self.activeChunk=self.map[actualX,actualY]
+                dx+=1
+        self.playerX+=dx
+        self.playerY+=dy
+        self.temp.blit(self.background,0,0)
+        self.background.fill("0")
+        self.background.blit(self.temp,-dx,-dy)
         HUD=createSurf([
             "│",
             "│",
@@ -114,9 +114,9 @@ class RPG(ConsoleWindow):
         ])
         self.display.bgMap.fill("0")
         self.display.bgMap.blit(self.background,0,0)
-        self.miniMap.fill("0")
+        self.miniMap.bgMap.fill("0")
         HUD.blit(createSurf(["HP: %s/%s"%(self.playerHealth,self.playerMaxHealth)],("C","4")[self.playerHealth>self.playerMaxHealth<0.5]),2,1)
-        HUD.blit(miniMap,1,18)
+        HUD.blit(self.miniMap,1,18)
         self.display.blit(HUD,worldWidth,0)
         self.display.charMap[worldWidth//2,12]="■"
         self.display.fgMap[worldWidth//2,12]="E"
