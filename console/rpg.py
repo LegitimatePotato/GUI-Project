@@ -4,7 +4,7 @@ hudWidth=15
 worldWidth=80-hudWidth
 class Biome:
     def __init__(self,viable,colour,treeChance):
-        self.viable=staticmethod(viable)
+        self.viable=viable
         self.colour=colour
         self.treeChance=treeChance
 class RPG(ConsoleWindow):
@@ -51,11 +51,11 @@ class RPG(ConsoleWindow):
             "3",
             0.08
         ),Biome(
-            lambda temperature,moisture,elevation:elevation<0.1,
+            lambda temperature,moisture,elevation:moisture>0.5 and temperature<0.75 and elevation>0.2,
             "2",
             0.125
         ),Biome(
-            lambda temperature,moisture,elevation:moisture>0.5 and temperature<0.75 and elevation>0.2,
+            lambda temperature,moisture,elevation:True,
             "2",
             0.035
         )
@@ -79,7 +79,7 @@ class RPG(ConsoleWindow):
             if biome.viable(temperature,moisture,elevation):
                 colour=biome.colour
                 break
-        self.background[x,y]=self.biomes[colour]
+        self.background[x,y]=colour
     def getNoise(self,x,y):
         return min(1,max(0,(self.noise.noise2d(x,y)+1)/2+self.noise.noise2d(x*3.5,y*3.5)/3.5))
     def handleInput(self,event):
