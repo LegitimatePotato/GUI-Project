@@ -29,8 +29,8 @@ class Tree(Entity):
 class RPG(ConsoleWindow):
     playerHealth=80
     playerMaxHealth=80
-    playerX=32
-    playerY=12
+    playerX=0
+    playerY=0
     noise=OpenSimplex(random.randrange(10000))
     biomeScale=150
     temperatureScale=12
@@ -123,7 +123,7 @@ class RPG(ConsoleWindow):
                 dx=-1
             elif keys[pygame.K_RIGHT]:
                 dx+=1
-        if not any((self.playerX+dx,self.playerY+dy)==(obj.x,obj.y)for obj in self.entities):
+        if not any((self.playerX+dx+32,self.playerY+dy+12)==(obj.x,obj.y)for obj in self.entities):
             self.playerX+=dx
             self.playerY+=dy
             self.temp.blit(self.background,0,0)
@@ -139,7 +139,6 @@ class RPG(ConsoleWindow):
                     self.updatePixel(x,_y)
         if self.tick%15==0:
             for entity in self.entities:
-                print((self.playerX+dx,self.playerY+dy),(entity.x,entity.y))
                 if entity.unload and(not 0<=entity.x-self.playerX<worldWidth or not 0<=entity.y-self.playerY<25):
                     self.entities.remove(entity)
         HUD=createSurf([
