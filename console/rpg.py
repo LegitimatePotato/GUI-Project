@@ -19,43 +19,43 @@ class RPG(ConsoleWindow):
     elevationScale=9
     biomes=(
         Biome(
-            lambda temperature,moisture,elevation:elevation<0.1,
+            lambda t,m,e:e<0.1,
             "1",
             0
         ),Biome(
-            lambda temperature,moisture,elevation:0.005>abs((9*temperature+2*moisture)/11-0.5),
+            lambda t,m,e:0.005>abs((9*t+2*m)/11-0.5),
             "9",
             0
         ),Biome(
-            lambda temperature,moisture,elevation:elevation>0.8,
+            lambda t,m,e:e>0.8,
             "8",
             0.01
         ),Biome(
-            lambda temperature,moisture,elevation:moisture<0.3 and temperature>0.55,
+            lambda t,m,e:m<0.3 and t>0.55,
             "6",
             0
         ),Biome(
-            lambda temperature,moisture,elevation:moisture<0.35 and temperature<0.3,
+            lambda t,m,e:m<0.35 and t<0.3,
             "B",
             0.025
         ),Biome(
-            lambda temperature,moisture,elevation:temperature<0.2,
+            lambda t,m,e:t<0.2,
             "F",
             0.01
         ),Biome(
-            lambda temperature,moisture,elevation:moisture>0.75 and temperature>0.6,
+            lambda t,m,e:m>0.75 and t>0.6,
             "A",
             0.1
         ),Biome(
-            lambda temperature,moisture,elevation:moisture>0.6 and temperature>0.3>elevation,
+            lambda t,m,e:m>0.6 and t>0.3>e,
             "3",
             0.08
         ),Biome(
-            lambda temperature,moisture,elevation:moisture>0.5 and temperature<0.75 and elevation>0.2,
+            lambda t,m,e:m>0.5 and t<0.75 and e>0.2,
             "2",
             0.125
         ),Biome(
-            lambda temperature,moisture,elevation:True,
+            lambda t,m,e:True,
             "2",
             0.035
         )
