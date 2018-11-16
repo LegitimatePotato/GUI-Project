@@ -54,7 +54,7 @@ class RPG(ConsoleWindow):
             biome="arctic"
         elif moisture>0.75 and temperature>0.6:
             biome="rainforest"
-        elif moisture>0.6 and temperature>0.3 and elevation<0.3:
+        elif moisture>0.6 and temperature>0.3>elevation:
             biome="swamp"
         elif moisture>0.5 and temperature<0.75 and elevation>0.2:
             biome="forest"
