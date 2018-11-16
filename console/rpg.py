@@ -5,8 +5,8 @@ worldWidth=80-hudWidth
 class RPG(ConsoleWindow):
     playerHealth=80
     playerMaxHealth=80
-    playerX=20
-    playerY=3
+    playerX=0
+    playerY=0
     noise=OpenSimplex(random.randrange(10000))
     biomeScale=150
     temperatureScale=12
@@ -26,11 +26,11 @@ class RPG(ConsoleWindow):
         "river":"9",
     }
     display=ConsoleSurf(80,25)
-    background=CharMap(65,25)
+    background=CharMap(worldWidth,25)
     miniMap=ConsoleSurf(14,7)
-    temp=CharMap(65,25)
+    temp=CharMap(worldWidth,25)
     def __init__(self):
-        for x in range(65):
+        for x in range(worldWidth):
             for y in range(25):
                 self.updatePixel(x,y)
         super().__init__("")
@@ -85,6 +85,14 @@ class RPG(ConsoleWindow):
         self.temp.blit(self.background,0,0)
         self.background.fill("0")
         self.background.blit(self.temp,-dx,-dy)
+        if dx:
+            _x=(worldWidth-1)*(dx>0)
+            for y in range(25):
+                updatePixel(_x,y)
+        if dy:
+            _y=24*(dy>0)
+            for x in range(int(worldWidth//2)):
+                
         HUD=createSurf([
             "│",
             "│",
