@@ -88,11 +88,11 @@ class RPG(ConsoleWindow):
         if dx:
             _x=(worldWidth-1)*(dx>0)
             for y in range(25):
-                updatePixel(_x,y)
+                self.updatePixel(_x,y)
         if dy:
             _y=24*(dy>0)
-            for x in range(int(worldWidth//2)):
-                
+            for x in range(worldWidth):
+                self.updatePixel(x,_y)
         HUD=createSurf([
             "│",
             "│",
