@@ -34,46 +34,46 @@ class RPG(ConsoleWindow):
     moistureScale=4
     elevationScale=9
     biomes=(
-        Biome(
+        Biome(#Lake
             lambda t,m,e:e<0.1,
             "1",
             0
-        ),Biome(
+        ),Biome(#River
             lambda t,m,e:0.005>abs((9*t+2*m)/11-0.5),
             "9",
             0
-        ),Biome(
+        ),Biome(#Mountain
             lambda t,m,e:e>0.8,
             "8",
-            0.01
-        ),Biome(
+            0.0075
+        ),Biome(#Desert
             lambda t,m,e:m<0.3 and t>0.55,
             "6",
             0
-        ),Biome(
+        ),Biome(#Tundra
             lambda t,m,e:m<0.35 and t<0.3,
             "B",
-            0.025
-        ),Biome(
+            0.001
+        ),Biome(#Arctic
             lambda t,m,e:t<0.2,
             "F",
-            0.01
-        ),Biome(
+            0.0005
+        ),Biome(#Rainforest
             lambda t,m,e:m>0.75 and t>0.6,
             "A",
-            0.1
-        ),Biome(
+            0.04
+        ),Biome(#Swamp
             lambda t,m,e:m>0.6 and t>0.3>e,
             "3",
-            0.08
-        ),Biome(
+            0.03
+        ),Biome(#Forest
             lambda t,m,e:m>0.5 and t<0.75 and e>0.2,
             "2",
-            0.125
-        ),Biome(
+            0.05
+        ),Biome(#Grassland
             lambda t,m,e:True,
             "2",
-            0.035
+            0.005
         )
     )
     display=ConsoleSurf(80,25)
@@ -96,10 +96,10 @@ class RPG(ConsoleWindow):
             if biome.viable(temperature,moisture,elevation):
                 colour=biome.colour
                 break
-        treeVal=moisture*100
+        treeVal=moisture*10000
         treeVal=treeVal-int(treeVal)
         if biome.treeChance>treeVal:
-            self.entities.append(Tree(x+self.playerX,y+self.playerY))
+            self.entities.append(Tree(x+self.playerX,y+self.playerY-1))
         self.background[x,y]=colour
     def getNoise(self,x,y):
         return min(1,max(0,(self.noise.noise2d(x,y)+1)/2+self.noise.noise2d(x*3.5,y*3.5)/3.5))
