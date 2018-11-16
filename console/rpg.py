@@ -2,6 +2,11 @@ from console.console import *
 from opensimplex import OpenSimplex
 hudWidth=15
 worldWidth=80-hudWidth
+class Biome:
+    def __init__(self,viable,colour,treeChance):
+        self.viable=staticmethod(viable)
+        self.colour=colour
+        self.treeChance=treeChance
 class RPG(ConsoleWindow):
     playerHealth=80
     playerMaxHealth=80
@@ -12,19 +17,49 @@ class RPG(ConsoleWindow):
     temperatureScale=12
     moistureScale=4
     elevationScale=9
-    biomes={
-        "desert":"6",
-        "mountain":"8",
-        "grassland":"2",
-        "swamp":"3",
-        "corrupt":"4",
-        "arctic":"F",
-        "lake":"1",
-        "rainforest":"A",
-        "tundra":"B",
-        "forest":"2",
-        "river":"9",
-    }
+    biomes=(
+        Biome(
+            lambda temperature,moisture,elevation:elevation<0.1,
+            "1",
+            0
+        ),Biome(
+            lambda temperature,moisture,elevation:0.005>abs((9*temperature+2*moisture)/11-0.5),
+            "9",
+            0
+        ),Biome(
+            lambda temperature,moisture,elevation:elevation>0.8,
+            "8",
+            0.01
+        ),Biome(
+            lambda temperature,moisture,elevation:moisture<0.3 and temperature>0.55,
+            "6",
+            0
+        ),Biome(
+            lambda temperature,moisture,elevation:moisture<0.35 and temperature<0.3,
+            "B",
+            0.025
+        ),Biome(
+            lambda temperature,moisture,elevation:temperature<0.2,
+            "F",
+            0.01
+        ),Biome(
+            lambda temperature,moisture,elevation:moisture>0.75 and temperature>0.6,
+            "A",
+            0.1
+        ),Biome(
+            lambda temperature,moisture,elevation:moisture>0.6 and temperature>0.3>elevation,
+            "3",
+            0.08
+        ),Biome(
+            lambda temperature,moisture,elevation:elevation<0.1,
+            "2",
+            0.125
+        ),Biome(
+            lambda temperature,moisture,elevation:moisture>0.5 and temperature<0.75 and elevation>0.2,
+            "2",
+            0.035
+        )
+    )
     display=ConsoleSurf(80,25)
     background=CharMap(worldWidth,25)
     miniMap=ConsoleSurf(14,7)
@@ -40,27 +75,11 @@ class RPG(ConsoleWindow):
         temperature=self.getNoise(noiseX/self.temperatureScale,noiseY/self.temperatureScale)
         moisture=self.getNoise(noiseX/self.moistureScale,noiseY/self.moistureScale)
         elevation=self.getNoise(noiseX/self.elevationScale,noiseY/self.elevationScale)**1.5
-        if elevation<0.1:
-            biome="lake"
-        elif 0.005>abs((9*temperature+2*moisture)/11-0.5):
-            biome="river"
-        elif elevation>0.8:
-            biome="mountain"
-        elif moisture<0.3 and temperature>0.55:
-            biome="desert"
-        elif moisture<0.35 and temperature<0.3:
-            biome="tundra"
-        elif temperature<0.2:
-            biome="arctic"
-        elif moisture>0.75 and temperature>0.6:
-            biome="rainforest"
-        elif moisture>0.6 and temperature>0.3>elevation:
-            biome="swamp"
-        elif moisture>0.5 and temperature<0.75 and elevation>0.2:
-            biome="forest"
-        else:
-            biome="grassland"
-        self.background[x,y]=self.biomes[biome]
+        for biome in self.biomes:
+            if biome.viable(temperature,moisture,elevation):
+                colour=biome.colour
+                break
+        self.background[x,y]=self.biomes[colour]
     def getNoise(self,x,y):
         return min(1,max(0,(self.noise.noise2d(x,y)+1)/2+self.noise.noise2d(x*3.5,y*3.5)/3.5))
     def handleInput(self,event):
