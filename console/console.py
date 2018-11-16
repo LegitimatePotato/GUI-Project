@@ -1,9 +1,12 @@
 from window.window import *
 class CharMap:
-    def __init__(self,width,height):
+    def __init__(self,width,height,map=None):
         self.width=width
         self.height=height
-        self.map=[[""for n in range(height)]for n in range(width)]
+        if map is None:
+            self.map=[[""for n in range(height)]for n in range(width)]
+        else:
+            self.map=map
     def __getitem__(self,key):
         return self.map[key[0]][key[1]]
     def __setitem__(self,key,value):
@@ -31,6 +34,23 @@ class CharMap:
                         return
     def fill(self,char):
         self.map=[[char for n in range(self.height)]for n in range(self.width)]
+def createMap(chars):
+    if type(chars)==str:
+        map=[[char]for char in chars]
+    elif type(chars)==list:
+        if type(chars[0])==str:
+            w=max(len(char)for char in chars)
+            h=len(chars)
+            map=[[""for y in range(h)]for x in range(w)]
+            for y in range(h):
+                for x in range(w):
+                    try:
+                        map[x][y]=chars[y][x]
+                    except IndexError:
+                        break
+        else:
+            map=chars
+    return CharMap(len(map),len(map[0]),map)
 class ConsoleSurf:
     charMap:CharMap
     fgMap:CharMap
@@ -63,12 +83,11 @@ def createSurf(text,fg="7",bg="0"):
         for y in range(h):
             for x in range(w):
                 try:
-                    if text[y][x]:
-                        if type(fg)==str:
-                            surf.fgMap[x,y]=fg
-                        if type(bg)==str:
-                            surf.bgMap[x,y]=bg
-                        surf.charMap[x,y]=text[y][x]
+                    surf.charMap[x,y]=text[y][x]
+                    if type(fg)==str:
+                        surf.fgMap[x,y]=fg
+                    if type(bg)==str:
+                        surf.bgMap[x,y]=bg
                 except IndexError:
                     break
     if type(fg)==CharMap:
