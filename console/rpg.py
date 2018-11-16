@@ -29,8 +29,8 @@ class Tree(Entity):
 class RPG(ConsoleWindow):
     playerHealth=80
     playerMaxHealth=80
-    playerX=0
-    playerY=0
+    playerX=32
+    playerY=12
     noise=OpenSimplex(random.randrange(10000))
     biomeScale=150
     temperatureScale=12
@@ -139,6 +139,7 @@ class RPG(ConsoleWindow):
                     self.updatePixel(x,_y)
         if self.tick%15==0:
             for entity in self.entities:
+                print((self.playerX+dx,self.playerY+dy),(entity.x,entity.y))
                 if entity.unload and(not 0<=entity.x-self.playerX<worldWidth or not 0<=entity.y-self.playerY<25):
                     self.entities.remove(entity)
         HUD=createSurf([
