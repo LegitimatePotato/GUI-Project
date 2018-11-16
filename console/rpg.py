@@ -7,6 +7,22 @@ class Biome:
         self.viable=viable
         self.colour=colour
         self.treeChance=treeChance
+class Entity:
+    x=0
+    y=0
+    charMap=None
+    fgMap=None
+    def __init__(self,x,y):
+        self.x=x
+        self.y=y
+    def render(self,display,playerX,playerY):
+        relX=self.x-playerX
+        relY=self.y-playerY
+        display.charMap.blit(self.charMap,relX,relY)
+        display.fgMap.blit(self.fgMap,relX,relY)
+class Tree(Entity):
+    charMap=createMap(["▲","║"])
+    fgMap=createMap(["A","4"])
 class RPG(ConsoleWindow):
     playerHealth=80
     playerMaxHealth=80
@@ -64,6 +80,7 @@ class RPG(ConsoleWindow):
     background=CharMap(worldWidth,25)
     miniMap=ConsoleSurf(14,7)
     temp=CharMap(worldWidth,25)
+    entities=[]
     def __init__(self):
         for x in range(worldWidth):
             for y in range(25):
@@ -79,6 +96,10 @@ class RPG(ConsoleWindow):
             if biome.viable(temperature,moisture,elevation):
                 colour=biome.colour
                 break
+        treeVal=moisture*100
+        treeVal=treeVal-int(treeVal)
+        if biome.treeChance>treeVal:
+            self.entities.append(Tree(x+self.playerX,y+self.playerY))
         self.background[x,y]=colour
     def getNoise(self,x,y):
         return min(1,max(0,(self.noise.noise2d(x,y)+1)/2+self.noise.noise2d(x*3.5,y*3.5)/3.5))
@@ -144,6 +165,8 @@ class RPG(ConsoleWindow):
         self.miniMap.bgMap.fill("0")
         HUD.blit(createSurf(["HP: %s/%s"%(self.playerHealth,self.playerMaxHealth)],("C","4")[self.playerHealth>self.playerMaxHealth<0.5]),2,1)
         HUD.blit(self.miniMap,1,18)
+        for entity in self.entities:
+            entity.render(self.display,self.playerX,self.playerY)
         self.display.blit(HUD,worldWidth,0)
         self.display.charMap[worldWidth//2,12]="■"
         self.display.fgMap[worldWidth//2,12]="E"
