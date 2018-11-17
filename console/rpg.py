@@ -123,7 +123,10 @@ class RPG(ConsoleWindow):
                 dx=-1
             elif keys[pygame.K_RIGHT]:
                 dx+=1
-        if not any((self.playerX+dx+32,self.playerY+dy+12)==(obj.x,obj.y)for obj in self.entities):
+        if not(
+                any((self.playerX+dx+32,self.playerY+dy+12)==(obj.x,obj.y)for obj in self.entities)or
+                self.background[32,12]==self.biomes[0].colour
+            ):
             self.playerX+=dx
             self.playerY+=dy
             self.temp.blit(self.background,0,0)
