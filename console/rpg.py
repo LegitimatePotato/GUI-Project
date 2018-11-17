@@ -99,7 +99,7 @@ class RPG(ConsoleWindow):
             if biome.viable(temperature,moisture,elevation):
                 colour=biome.colour
                 break
-        treeVal=moisture*10000
+        treeVal=moisture*10000+temperature
         treeVal=treeVal-int(treeVal)
         if biome.treeChance>treeVal:
             self.entities.append(Tree(x+self.playerX,y+self.playerY))
