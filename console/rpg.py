@@ -84,14 +84,18 @@ class RPG(ConsoleWindow):
     miniMap=ConsoleSurf(14,7)
     temp=CharMap(worldWidth,25)
     entities=[]
+    miniMapScale=16
+    miniMap={}
     def __init__(self):
         for x in range(worldWidth):
             for y in range(25):
                 self.updatePixel(x,y)
         super().__init__("")
     def updatePixel(self,x,y):
-        noiseX=(self.playerX+x)/self.biomeScale
-        noiseY=(self.playerY+y)/self.biomeScale
+        realX=x+self.playerX
+        realY=y+self.playerY
+        noiseX=realX/self.biomeScale
+        noiseY=realY/self.biomeScale
         temperature=self.getNoise(noiseX/self.temperatureScale,noiseY/self.temperatureScale)
         moisture=self.getNoise(noiseX/self.moistureScale,noiseY/self.moistureScale)
         elevation=self.getNoise(noiseX/self.elevationScale,noiseY/self.elevationScale)**1.5
@@ -102,7 +106,9 @@ class RPG(ConsoleWindow):
         treeVal=moisture*10000+temperature
         treeVal=treeVal-int(treeVal)
         if biome.treeChance>treeVal:
-            self.entities.append(Tree(x+self.playerX,y+self.playerY))
+            self.entities.append(Tree(realX,realY))
+        if realX%self.miniMapScale==0 and realY%self.miniMapScale==0:
+            self.miniMap[(realX/self.miniMapScale,realY/self.miniMapScale)]=colour
         self.background[x,y]=colour
     def getNoise(self,x,y):
         return min(1,max(0,(self.noise.noise2d(x,y)+1)/2+self.noise.noise2d(x*3.5,y*3.5)/3.5))
@@ -125,7 +131,7 @@ class RPG(ConsoleWindow):
                 dx+=1
         if not(
                 any((self.playerX+dx+32,self.playerY+dy+12)==(obj.x,obj.y)for obj in self.entities)or
-                self.background[32,12]==self.biomes[0].colour
+                self.background[32+dx,12+dy]==self.biomes[0].colour
             ):
             self.playerX+=dx
             self.playerY+=dy
