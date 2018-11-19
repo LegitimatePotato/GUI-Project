@@ -85,7 +85,7 @@ class RPG(ConsoleWindow):
     temp=CharMap(worldWidth,25)
     entities=[]
     miniMapScale=16
-    miniMap={}
+    #miniMap={}
     def __init__(self):
         for x in range(worldWidth):
             for y in range(25):
@@ -107,8 +107,8 @@ class RPG(ConsoleWindow):
         treeVal=treeVal-int(treeVal)
         if biome.treeChance>treeVal:
             self.entities.append(Tree(realX,realY))
-        if realX%self.miniMapScale==0 and realY%self.miniMapScale==0:
-            self.miniMap[(realX/self.miniMapScale,realY/self.miniMapScale)]=colour
+        #if realX%self.miniMapScale==0 and realY%self.miniMapScale==0:
+        #    self.miniMap[int(realX/self.miniMapScale),int(realY/self.miniMapScale)]=colour
         self.background[x,y]=colour
     def getNoise(self,x,y):
         return min(1,max(0,(self.noise.noise2d(x,y)+1)/2+self.noise.noise2d(x*3.5,y*3.5)/3.5))
