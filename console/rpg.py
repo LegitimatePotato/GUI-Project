@@ -35,48 +35,60 @@ class RPG(ConsoleWindow):
     biomeScale=150
     temperatureScale=12
     moistureScale=4
-    elevationScale=9
+    elevationScale=8
     biomes=(
         Biome(#Lake
             lambda t,m,e:e<0.1,
             "1",
+            0
+        ),Biome(#Lava Flow
+            lambda t,m,e:t>0.575 and 0<(m+e*2)%0.3<0.05 and e>0.685,
+            "C",
+            0
+        ),Biome(#Volcano
+            lambda t,m,e:t>0.6 and e>0.7,
+            "8",
             0
         ),Biome(#River
             lambda t,m,e:0.005>abs((9*t+2*m)/11-0.5),
             "9",
             0
         ),Biome(#Mountain
-            lambda t,m,e:e>0.8,
-            "8",
+            lambda t,m,e:e>0.7,
+            "7",
             0.0075
         ),Biome(#Desert
-            lambda t,m,e:m<0.3 and t>0.55,
+            lambda t,m,e:t>0.55 and m<0.3,
             "6",
             0
         ),Biome(#Tundra
-            lambda t,m,e:m<0.35 and t<0.3,
+            lambda t,m,e:t<0.3 and m<0.4,
             "B",
-            0.001
+            0.0005
         ),Biome(#Arctic
             lambda t,m,e:t<0.2,
             "F",
-            0.0005
-        ),Biome(#Rainforest
-            lambda t,m,e:m>0.75 and t>0.6,
+            0.00025
+        ),Biome(#Beach
+            lambda t,m,e:t>0.5 and e<0.12,
+            "6",
+            0
+        ),Biome(#Acid
+            lambda t,m,e:t>0.7 and m>0.75,
             "A",
             0.04
         ),Biome(#Swamp
-            lambda t,m,e:m>0.6 and t>0.3>e,
+            lambda t,m,e:t>0.3 and m>0.65 and e<0.4,
             "3",
             0.03
         ),Biome(#Forest
-            lambda t,m,e:m>0.5 and t<0.75 and e>0.2,
+            lambda t,m,e:t<0.75 and m>0.5 and e>0.2,
             "2",
             0.05
         ),Biome(#Grassland
             lambda t,m,e:True,
             "2",
-            0.005
+            0.0025
         )
     )
     display=ConsoleSurf(80,25)
