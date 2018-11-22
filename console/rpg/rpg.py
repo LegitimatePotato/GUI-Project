@@ -132,7 +132,7 @@ class RPG(ConsoleWindow):
         newY=self.player.y+dy
         if not(
                 self.background[newX,newY]==self.biomes[0].colour or
-                any((newX,newY)==(obj.x,obj.y)for obj in self.entities)
+                any((newx,newY)==(obj.x,obj.y)for obj in self.entities)
             ):
             self.player.x=newX
             self.player.y=newY
