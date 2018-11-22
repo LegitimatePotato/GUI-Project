@@ -15,8 +15,6 @@ class Biome:
         self.treeChance=treeChance
         self.maxTreeHeight=maxTreeHeight
 class RPG(ConsoleWindow):
-    playerHealth=80
-    playerMaxHealth=80
     noise=OpenSimplex(random.randrange(10000))
     biomeScale=150
     temperatureScale=12
@@ -89,8 +87,8 @@ class RPG(ConsoleWindow):
         self.player=Player(32,16)
         self.entities.append(self.player)
         super().__init__("")
-        for x in range(worldWidth):
-            for y in range(25):
+        for x in range(worldWidth-1,-1,-1):
+            for y in range(24,-1,-1):
                 self.updatePixel(x,y)
     def updatePixel(self,x,y):
         realX=x-self.scrollX
@@ -185,7 +183,7 @@ class RPG(ConsoleWindow):
         self.display.bgMap.fill("0")
         self.display.bgMap.blit(self.background,0,0)
         self.miniMap.bgMap.fill("0")
-        HUD.blit(createSurf(["HP: %s/%s"%(self.playerHealth,self.playerMaxHealth)],("C","4")[self.playerHealth>self.playerMaxHealth<0.5]),2,1)
+        HUD.blit(createSurf(["HP: %s/%s"%(self.player.health,self.player.maxHealth)],("C","4")[self.player.health>self.player.maxHealth<0.5]),2,1)
         HUD.blit(self.miniMap,1,18)
         for entity in self.entities:
             entity.render(self.display,self.scrollX,self.scrollY)
