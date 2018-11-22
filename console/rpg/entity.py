@@ -10,13 +10,14 @@ class Entity:
     def __init__(self,x,y):
         self.x=x
         self.y=y
-    def render(self,display,playerX,playerY):
-        relX=self.x-playerX-self.xOffset
-        relY=self.y-playerY-self.yOffset
+    def render(self,display,scrollX,scrollY):
+        relX=self.x+scrollX-self.xOffset
+        relY=self.y+scrollY-self.yOffset
         display.charMap.blit(self.charMap,relX,relY)
         display.fgMap.blit(self.fgMap,relX,relY)
 class Player(Entity):
-    pass
+    charMap=createMap("■")
+    fgMap=createMap("E")
 class Tree(Entity):
     def __init__(self,x,y,height):
         super().__init__(x,y)
