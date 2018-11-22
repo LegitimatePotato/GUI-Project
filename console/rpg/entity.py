@@ -16,6 +16,8 @@ class Entity:
         display.charMap.blit(self.charMap,relX,relY)
         display.fgMap.blit(self.fgMap,relX,relY)
 class Player(Entity):
+    health=80
+    maxHealth=80
     charMap=createMap("■")
     fgMap=createMap("E")
 class Tree(Entity):
