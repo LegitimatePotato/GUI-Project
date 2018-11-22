@@ -17,8 +17,6 @@ class Biome:
 class RPG(ConsoleWindow):
     playerHealth=80
     playerMaxHealth=80
-    playerX=0
-    playerY=0
     noise=OpenSimplex(random.randrange(10000))
     biomeScale=150
     temperatureScale=12
@@ -85,14 +83,18 @@ class RPG(ConsoleWindow):
     entities=[]
     miniMapScale=16
     #miniMap={}
+    scrollX=0
+    scrollY=0
     def __init__(self):
+        self.player=Player(32,16)
+        self.entities.append(self.player)
         super().__init__("")
         for x in range(worldWidth):
             for y in range(25):
                 self.updatePixel(x,y)
     def updatePixel(self,x,y):
-        realX=x+self.playerX
-        realY=y+self.playerY
+        realX=x-self.scrollX
+        realY=y-self.scrollY
         noiseX=realX/self.biomeScale
         noiseY=realY/self.biomeScale
         temperature=self.getNoise(noiseX/self.temperatureScale,noiseY/self.temperatureScale)
@@ -129,11 +131,13 @@ class RPG(ConsoleWindow):
             elif keys[pygame.K_RIGHT]:
                 dx+=1
         if not(
-                any((self.playerX+dx+32,self.playerY+dy+12)==(obj.x,obj.y)for obj in self.entities)or
-                self.background[32+dx,12+dy]==self.biomes[0].colour
+                self.background[32+dx,12+dy]==self.biomes[0].colour or
+                any((self.player.x+dx,self.player.y+dy)==(obj.x,obj.y)for obj in self.entities)
             ):
-            self.playerX+=dx
-            self.playerY+=dy
+            self.player.x+=dx
+            self.player.y+=dy
+            self.scrollX-=dx
+            self.scrollY-=dy
             self.temp.blit(self.background,0,0)
             self.background.fill("0")
             self.background.blit(self.temp,-dx,-dy)
@@ -147,7 +151,7 @@ class RPG(ConsoleWindow):
                     self.updatePixel(x,_y)
         if self.tick%15==0:
             for entity in self.entities:
-                if entity.unload and(not 0<=entity.x-self.playerX<worldWidth or not 0<=entity.y-self.playerY<25):
+                if entity.unload and(not 0<=entity.x+self.scrollX<worldWidth or not 0<=entity.y+self.scrollY<25):
                     self.entities.remove(entity)
         HUD=createSurf([
             "│",
@@ -183,10 +187,8 @@ class RPG(ConsoleWindow):
         self.miniMap.bgMap.fill("0")
         HUD.blit(createSurf(["HP: %s/%s"%(self.playerHealth,self.playerMaxHealth)],("C","4")[self.playerHealth>self.playerMaxHealth<0.5]),2,1)
         HUD.blit(self.miniMap,1,18)
-        self.display.charMap[worldWidth//2,12]="■"
-        self.display.fgMap[worldWidth//2,12]="E"
         for entity in self.entities:
-            entity.render(self.display,self.playerX,self.playerY)
+            entity.render(self.display,self.scrollX,self.scrollY)
         self.display.blit(HUD,worldWidth,0)
         self.renderSurf(self.display,0,0)
         pygame.display.flip()
