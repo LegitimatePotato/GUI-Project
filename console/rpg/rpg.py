@@ -76,11 +76,11 @@ class RPG(ConsoleWindow):
         biomes.append(Biome(**biome))
     display=ConsoleSurf(80,25)
     background=CharMap(worldWidth,25)
-    miniMap=ConsoleSurf(14,7)
+    miniMapSurf=CharMap(14,7)
     temp=CharMap(worldWidth,25)
     entities=[]
     miniMapScale=16
-    #miniMap={}
+    miniMap={}
     scrollX=0
     scrollY=0
     def __init__(self):
@@ -106,8 +106,8 @@ class RPG(ConsoleWindow):
         treeVal=treeVal-int(treeVal)
         if biome.treeChance>treeVal:
             self.entities.append(Tree(realX,realY,random.randrange(1,biome.maxTreeHeight+1)))
-        #if realX%self.miniMapScale==0 and realY%self.miniMapScale==0:
-        #    self.miniMap[int(realX/self.miniMapScale),int(realY/self.miniMapScale)]=colour
+        if realX%self.miniMapScale==0 and realY%self.miniMapScale==0:
+            self.miniMap[int(realX/self.miniMapScale),int(realY/self.miniMapScale)]=colour
         self.background[x,y]=colour
     def getNoise(self,x,y):
         return min(1,max(0,(self.noise.noise2d(x,y)+1)/2+self.noise.noise2d(x*3.5,y*3.5)/3.5))
@@ -182,9 +182,17 @@ class RPG(ConsoleWindow):
         self.display.fgMap.fill("7")
         self.display.bgMap.fill("0")
         self.display.bgMap.blit(self.background,0,0)
-        self.miniMap.bgMap.fill("0")
+        self.miniMapSurf.fill("0")
+        xOff=self.scrollX//self.miniMapScale
+        yOff=self.scrollY//self.miniMapScale
+        for x,y in self.miniMap:
+            realX=int(x+xOff+6)
+            realY=int(y+yOff+3)
+            if 0<=realX<=13 and 0<=y+yOff<=6:
+                print(realX,realY)
+                self.miniMapSurf[realX,realY]=self.miniMap[x,y]
         HUD.blit(createSurf(["HP: %s/%s"%(self.player.health,self.player.maxHealth)],("C","4")[self.player.health>self.player.maxHealth<0.5]),2,1)
-        HUD.blit(self.miniMap,1,18)
+        HUD.bgMap.blit(self.miniMapSurf,1,18)
         for entity in self.entities:
             entity.render(self.display,self.scrollX,self.scrollY)
         self.display.blit(HUD,worldWidth,0)
