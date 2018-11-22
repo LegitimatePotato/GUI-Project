@@ -128,12 +128,14 @@ class RPG(ConsoleWindow):
                 dx=-1
             elif keys[pygame.K_RIGHT]:
                 dx+=1
+        newX=self.player.x+dx
+        newY=self.player.y+dy
         if not(
-                self.background[32+dx,12+dy]==self.biomes[0].colour or
-                any((self.player.x+dx,self.player.y+dy)==(obj.x,obj.y)for obj in self.entities)
+                self.background[newX,newY]==self.biomes[0].colour or
+                any((newX,newY)==(obj.x,obj.y)for obj in self.entities)
             ):
-            self.player.x+=dx
-            self.player.y+=dy
+            self.player.x=newX
+            self.player.y=newY
             self.scrollX-=dx
             self.scrollY-=dy
             self.temp.blit(self.background,0,0)
@@ -188,8 +190,7 @@ class RPG(ConsoleWindow):
         for x,y in self.miniMap:
             realX=int(x+xOff+6)
             realY=int(y+yOff+3)
-            if 0<=realX<=13 and 0<=y+yOff<=6:
-                print(realX,realY)
+            if 0<=realX<=13 and 0<=realY<=6:
                 self.miniMapSurf[realX,realY]=self.miniMap[x,y]
         HUD.blit(createSurf(["HP: %s/%s"%(self.player.health,self.player.maxHealth)],("C","4")[self.player.health>self.player.maxHealth<0.5]),2,1)
         HUD.bgMap.blit(self.miniMapSurf,1,18)
