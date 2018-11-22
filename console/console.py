@@ -107,6 +107,7 @@ class ConsoleWindow(Window):
     except:
         print("failed to load font")
     colours={
+        "" :(  0,  0,  0),
         "0":(  0,  0,  0),  #0,0,0
         "1":(  0,  0,128),  #240,100,50
         "2":(  0,128,  0),  #120,100,50
