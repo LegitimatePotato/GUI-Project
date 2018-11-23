@@ -79,12 +79,12 @@ class RPG(ConsoleWindow):
     miniMapSurf=CharMap(14,7)
     temp=CharMap(worldWidth,25)
     entities=[]
-    miniMapScale=16
+    miniMapScale=24
     miniMap={}
     scrollX=0
     scrollY=0
     def __init__(self):
-        self.player=Player(32,16)
+        self.player=Player(32,12)
         self.entities.append(self.player)
         super().__init__("")
         for x in range(worldWidth-1,-1,-1):
@@ -106,8 +106,11 @@ class RPG(ConsoleWindow):
         treeVal=treeVal-int(treeVal)
         if biome.treeChance>treeVal:
             self.entities.append(Tree(realX,realY,random.randrange(1,biome.maxTreeHeight+1)))
-        if realX%self.miniMapScale==0 and realY%self.miniMapScale==0:
-            self.miniMap[int(realX/self.miniMapScale),int(realY/self.miniMapScale)]=colour
+        try:
+            self.miniMap[int(realX/self.miniMapScale),int(realY/self.miniMapScale)]
+        except KeyError:
+            if colour!="2"or(realX%self.miniMapScale==int(self.miniMapScale//2) and realY%self.miniMapScale==int(self.miniMapScale//2)):
+                self.miniMap[int(realX/self.miniMapScale),int(realY/self.miniMapScale)]=colour
         self.background[x,y]=colour
     def getNoise(self,x,y):
         return min(1,max(0,(self.noise.noise2d(x,y)+1)/2+self.noise.noise2d(x*3.5,y*3.5)/3.5))
@@ -131,8 +134,8 @@ class RPG(ConsoleWindow):
         newX=self.player.x+dx
         newY=self.player.y+dy
         if not(
-                self.background[newX,newY]==self.biomes[0].colour or
-                any((newx,newY)==(obj.x,obj.y)for obj in self.entities)
+                self.background[newX+self.scrollX,newY+self.scrollY]==self.biomes[0].colour or
+                any((newX,newY)==(obj.x,obj.y)for obj in self.entities)
             ):
             self.player.x=newX
             self.player.y=newY
