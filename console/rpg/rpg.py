@@ -84,7 +84,7 @@ class RPG(ConsoleWindow):
     scrollX=0
     scrollY=0
     def __init__(self):
-        self.player=Player(32,12)
+        self.player=Player(self,32,12)
         self.entities.append(self.player)
         super().__init__("")
         for x in range(worldWidth-1,-1,-1):
@@ -105,7 +105,7 @@ class RPG(ConsoleWindow):
         treeVal=moisture*10000+temperature
         treeVal=treeVal-int(treeVal)
         if biome.treeChance>treeVal:
-            self.entities.append(Tree(realX,realY,random.randrange(1,biome.maxTreeHeight+1)))
+            self.entities.append(Tree(self,realX,realY,random.randrange(1,biome.maxTreeHeight+1)))
         try:
             self.miniMap[int(realX/self.miniMapScale),int(realY/self.miniMapScale)]
         except KeyError:
@@ -131,14 +131,10 @@ class RPG(ConsoleWindow):
                 dx=-1
             elif keys[pygame.K_RIGHT]:
                 dx+=1
-        newX=self.player.x+dx
-        newY=self.player.y+dy
         if not(
-                self.background[newX+self.scrollX,newY+self.scrollY]==self.biomes[0].colour or
-                any((newX,newY)==(obj.x,obj.y)for obj in self.entities)
+                self.background[self.player.x+dx+self.scrollX,self.player.y+dy+self.scrollY]==self.biomes[0].colour or
+                not self.player.move(dx,dy)
             ):
-            self.player.x=newX
-            self.player.y=newY
             self.scrollX-=dx
             self.scrollY-=dy
             self.temp.blit(self.background,0,0)
