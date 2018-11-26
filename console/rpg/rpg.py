@@ -131,9 +131,10 @@ class RPG(ConsoleWindow):
                 dx=-1
             elif keys[pygame.K_RIGHT]:
                 dx+=1
-        if not(
-                self.background[self.player.x+dx+self.scrollX,self.player.y+dy+self.scrollY]==self.biomes[0].colour or
-                not self.player.move(dx,dy)
+        if (
+                (dx or dy)and
+                self.background[self.player.x+dx+self.scrollX,self.player.y+dy+self.scrollY]!=self.biomes[0].colour and
+                self.player.move(dx,dy)
             ):
             self.scrollX-=dx
             self.scrollY-=dy
