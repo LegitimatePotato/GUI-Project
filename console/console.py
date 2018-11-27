@@ -66,7 +66,7 @@ class ConsoleSurf:
         self.bgMap.fill("0")
     def __getitem__(self,key):
         return(self.charMap[key],self.fgMap[key],self.bgMap[key])
-    def __setitem__(self,key,*values):
+    def __setitem__(self,key,values):
         if len(values)==1:
             self.charMap[key]=values
         else:
@@ -125,8 +125,23 @@ class ConsoleWindow(Window):
         "E":(255,255,  0),  #60,100,100
         "F":(255,255,255),  #0,0,100
     }
-    codePage=r"☺☻♥♦♣♠•◘○◙♂♀♪♫☼►◄↕‼¶§▬↨↑↓→←∟↔▲▼ !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~⌂ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥₧ƒáíóúñÑªº¿⌐¬½¼¡«»░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀αßΓπΣσµτΦΘΩδ∞φε∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■"
-    codePage=" "+codePage
+    codePage=\
+        """ ☺☻♥♦♣♠•◘○◙♂♀♪♫☼"""\
+        """►◄↕‼¶§▬↨↑↓→←∟↔▲▼"""\
+        """ !"#$%&'()*+,-./"""\
+        """0123456789:;<=>?"""\
+        """@ABCDEFGHIJKLMNO"""\
+        """PQRSTUVWXYZ[\]^_"""\
+        """`abcdefghijklmno"""\
+        """pqrstuvwxyz{|}~⌂"""\
+        """ÇüéâäàåçêëèïîìÄÅ"""\
+        """ÉæÆôöòûùÿÖÜ¢£¥₧ƒ"""\
+        """áíóúñÑªº¿⌐¬½¼¡«»"""\
+        """░▒▓│┤╡╢╖╕╣║╗╝╜╛┐"""\
+        """└┴┬├─┼╞╟╚╔╩╦╠═╬╧"""\
+        """╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀"""\
+        """αßΓπΣσµτΦΘΩδ∞φε∩"""\
+        """≡±≥≤⌠⌡÷≈°∙·√ⁿ²■ """
     chars={
     }
     def __init__(self,title=""):
