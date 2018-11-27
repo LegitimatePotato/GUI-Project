@@ -4,7 +4,7 @@ class Editor(ConsoleWindow):
     activeChar=StringVar()
     activeFG=StringVar()
     activeBG=StringVar()
-    activeChar.set(" ")
+    activeChar.set(" ")
     activeFG.set(" ")
     activeBG.set(" ")
     display=ConsoleSurf(80,25)
