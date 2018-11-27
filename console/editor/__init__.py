@@ -1,5 +1,6 @@
 from console import *
 class Editor(ConsoleWindow):
+    ups=60
     activeChar=StringVar()
     activeFG=StringVar()
     activeBG=StringVar()
@@ -37,18 +38,21 @@ class Editor(ConsoleWindow):
         return inner
     def update(self):
         super().update()
-        if pygame.mouse.get_pressed()[0]:
-            x,y=pygame.mouse.get_pos()
-            x//=8
-            y//=12
+        pressed=pygame.mouse.get_pressed()
+        x,y=pygame.mouse.get_pos()
+        x//=8
+        y//=12
+        if pressed[0]:
             char=self.activeChar.get()
             fg=self.activeFG.get()
             bg=self.activeBG.get()
-            if not(char.isspace()):
+            if char!=" ":
                 self.display.charMap[x,y]=char
             if not(fg.isspace()):
                 self.display.fgMap[x,y]=fg
             if not(bg.isspace()):
                 self.display.bgMap[x,y]=bg
+        elif pressed[2]:
+            self.display[x,y]=(" ","7","0")
         self.renderSurf(self.display,0,0)
         pygame.display.flip()
