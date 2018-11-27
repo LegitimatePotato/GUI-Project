@@ -31,6 +31,6 @@ class Player(Entity):
 class Tree(Entity):
     def __init__(self,game,x,y,height):
         super().__init__(game,x,y)
-        self.charMap=createMap(["▲"]+["║"]*height)
+        self.charMap=createMap(["▲"]+["│"]*height)
         self.fgMap=createMap(["A"]+["4"]*height)
         self.yOffset=height
