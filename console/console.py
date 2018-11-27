@@ -215,20 +215,19 @@ class ConsoleWindow(Window):
             bg=surf.bgMap[0,line]
             for c in range(surf.width):
                 dispX=x+c
+                if dispX>=80:
+                    break
                 char,newFg,newBg=surf[c,line]
-                if newFg!=fg or newBg!=bg or dispX>=79 or c==surf.width-1:
-                    if dispX>=79 or c==surf.width-1:
+                if newFg!=fg or newBg!=bg or dispX==79 or c==surf.width-1:
+                    if dispX==79 or c==surf.width-1:
                         current+=char
                     text=self.font.render(current,0,self.colours[fg],self.colours[bg])
                     self.screen.blit(text,(8*startX,12*dispY))
-                    if dispX>=80:
-                        break
                     fg=newFg
                     bg=newBg
                     current=""
                     startX=dispX
-                if not(dispX>=79 or c==surf.width-1):
-                    current+=char
+                current+=char
     def update(self):
         for event in pygame.event.get():
             if event.type==pygame.QUIT:
