@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter.ttk import *
 import tkinter as tk
-import os,threading,random,time,ctypes
+import os,threading,random,time,ctypes,math
 try:
     import pygame
 except ImportError:
