@@ -166,6 +166,6 @@ class Storybook(Window):
         for n in range(self.game.storyProgression):
             self.notebook.add(self.frames[n])
             self.widget(Label,0,0,top=self.frames[n],text=self.pages[n])
-x=Editor()
+x=RPG()
 root.withdraw()
 mainloop()
