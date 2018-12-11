@@ -33,12 +33,18 @@ class Editor(ConsoleWindow):
                 tkColour="#%02x%02x%02x"%self.colours[colour]
                 self.widget(tk.Radiobutton,c+1,0,top=self.fgs,text=colour,variable=self.activeFG,value=colour,bg=tkColour,**settings)
                 self.widget(tk.Radiobutton,c+1,0,top=self.bgs,text=colour,variable=self.activeBG,value=colour,bg=tkColour,**settings)
+<<<<<<< HEAD
         maxDist=math.hypot(24,79)
         ratios=(
+=======
+        maxDist=math.sqrt(79**2+24**2)
+        ratios=[
+>>>>>>> 3dd2831d6e2807b07c7e5378e46ebf10b242c3f8
             (" ",0),
             ("░",1/3),
             ("▒",1/2),
             ("▓",2/3),
+<<<<<<< HEAD
         )
         colours=(
             ("0",0),
@@ -69,6 +75,50 @@ class Editor(ConsoleWindow):
                         break
                 else:
                     self.display[x,y]=gradient[-1][1:]
+=======
+        ]
+        c=[
+            ("0",0),
+            ("8",.5),
+            ("7",.75),
+            ("F",1)
+        ]
+        colours=[#░▒▓
+            (0," ","8","0"),
+            (1/8,"░","8","0"),
+            (3/16,"▓","0","7"),
+            (1/4,"▓","8","0"),
+            (3/8,"▓","8","0"),
+            (1/2," ","0","8"),
+            (9/16,"░","7","8"),
+            (5/8,"▒","7","8"),
+            (11/16,"▓","7","8"),
+            (3/4," ","8","7"),
+            (13/16,"░","F","7"),
+            (7/8,"▒","F","7"),
+            (15/16,"▓","F","7"),
+            (1," ","8","F"),
+        ]
+        colours=[]
+        values=set()
+        for fg in c:
+            for bg in c:
+                for ratio in ratios:
+                    value=ratio[1]*fg[1]+(1-ratio[1])*bg[1]
+                    if value not in values:
+                        values.add(value)
+                        colours.append((value,ratio[0],fg[0],bg[0]))
+        colours.sort(key=lambda x:x[0])
+        for x in range(80):
+            for y in range(25):
+                value=math.sqrt(x**2+y**2)/maxDist
+                for item in range(len(colours)):
+                    if value<colours[item][0]:
+                        self.display[x,y]=colours[item-1][1:]
+                        break
+                else:
+                    self.display[x,y]=colours[-1][1:]
+>>>>>>> 3dd2831d6e2807b07c7e5378e46ebf10b242c3f8
     def changeChar(self,char):
         def inner():
             self.activeChar=char
