@@ -33,19 +33,13 @@ class Editor(ConsoleWindow):
                 tkColour="#%02x%02x%02x"%self.colours[colour]
                 self.widget(tk.Radiobutton,c+1,0,top=self.fgs,text=colour,variable=self.activeFG,value=colour,bg=tkColour,**settings)
                 self.widget(tk.Radiobutton,c+1,0,top=self.bgs,text=colour,variable=self.activeBG,value=colour,bg=tkColour,**settings)
-<<<<<<< HEAD
-        maxDist=math.hypot(24,79)
-        ratios=(
-=======
         maxDist=math.sqrt(79**2+24**2)
         ratios=[
->>>>>>> 3dd2831d6e2807b07c7e5378e46ebf10b242c3f8
             (" ",0),
             ("░",1/3),
             ("▒",1/2),
             ("▓",2/3),
-<<<<<<< HEAD
-        )
+        ]
         colours=(
             ("0",0),
             ("8",.5),
@@ -75,8 +69,6 @@ class Editor(ConsoleWindow):
                         break
                 else:
                     self.display[x,y]=gradient[-1][1:]
-=======
-        ]
         c=[
             ("0",0),
             ("8",.5),
@@ -118,7 +110,6 @@ class Editor(ConsoleWindow):
                         break
                 else:
                     self.display[x,y]=colours[-1][1:]
->>>>>>> 3dd2831d6e2807b07c7e5378e46ebf10b242c3f8
     def changeChar(self,char):
         def inner():
             self.activeChar=char
